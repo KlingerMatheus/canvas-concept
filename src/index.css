@@ -1,0 +1,271 @@
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Geist:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import 'tailwindcss';
+@import '@xyflow/react/dist/style.css';
+
+@theme inline {
+  --font-sans: 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+  --font-display: 'Bricolage Grotesque', var(--font-sans);
+
+  --color-canvas: var(--canvas);
+  --color-surface: var(--surface);
+  --color-card: var(--card);
+  --color-card-muted: var(--card-muted);
+  --color-border-soft: var(--border-soft);
+  --color-border-strong: var(--border-strong);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-ink-faint: var(--ink-faint);
+
+  --color-accent: var(--accent);
+  --color-accent-2: var(--accent-2);
+  --color-accent-soft: var(--accent-soft);
+  --color-ok: var(--ok);
+  --color-ok-soft: var(--ok-soft);
+  --color-err: var(--err);
+  --color-err-soft: var(--err-soft);
+  --color-handle-in: var(--handle-in);
+  --color-handle-out: var(--handle-out);
+
+  --radius-node: 16px;
+}
+
+:root {
+  /* Light */
+  --canvas: #eef0f5;
+  --surface: #f8f9fc;
+  --card: #ffffff;
+  --card-muted: #f5f6fa;
+  --border-soft: #e8eaf0;
+  --border-strong: #dadce6;
+  --ink: #16161d;
+  --ink-muted: #5b5f6e;
+  --ink-faint: #9499a8;
+
+  --accent: #6d5cf0;
+  --accent-2: #8b7cf6;
+  --accent-soft: #ece9fe;
+  --ok: #16a34a;
+  --ok-soft: #e7f6ec;
+  --err: #e1395a;
+  --err-soft: #fcebef;
+  --handle-in: #3b82f6;
+  --handle-out: #16a34a;
+
+  --grid-dot: #c9cdd9;
+  --shadow-node: 0 1px 2px rgba(16, 18, 32, 0.04), 0 8px 24px -8px rgba(16, 18, 32, 0.12);
+}
+
+.dark {
+  --canvas: #08080c;
+  --surface: #0f0f16;
+  --card: #14141d;
+  --card-muted: #1a1a24;
+  --border-soft: #24242f;
+  --border-strong: #2e2e3b;
+  --ink: #f3f3f7;
+  --ink-muted: #9b9bae;
+  --ink-faint: #62627a;
+
+  --accent: #8b7cf6;
+  --accent-2: #a594f9;
+  --accent-soft: #211d3a;
+  --ok: #34d399;
+  --ok-soft: #112620;
+  --err: #fb6f8c;
+  --err-soft: #2a1318;
+  --handle-in: #5b9dff;
+  --handle-out: #34d399;
+
+  --grid-dot: #21212c;
+  --shadow-node: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -10px rgba(0, 0, 0, 0.6);
+}
+
+* {
+  border-color: var(--border-soft);
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--canvas);
+  color: var(--ink);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ── React Flow theming ─────────────────────────────── */
+.react-flow {
+  --xy-edge-stroke-default: var(--border-strong);
+  --xy-edge-stroke-selected-default: var(--accent);
+}
+.react-flow__attribution {
+  display: none;
+}
+.react-flow__handle {
+  width: 11px;
+  height: 11px;
+  border: 2px solid var(--card);
+  box-shadow: 0 0 0 1px var(--border-strong);
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+.react-flow__handle-left {
+  background: var(--handle-in);
+  left: -6px;
+}
+.react-flow__handle-right {
+  background: var(--handle-out);
+  right: -6px;
+}
+/* scale in place on hover — keep the centering translate so the handle
+   grows on its own axis instead of shifting position */
+.react-flow__handle-left:hover {
+  transform: translate(-50%, -50%) scale(1.35);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--handle-in) 25%, transparent);
+}
+.react-flow__handle-right:hover {
+  transform: translate(50%, -50%) scale(1.35);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--handle-out) 25%, transparent);
+}
+.react-flow__handle.fp-handle-empty {
+  background: var(--card);
+}
+/* main flow-sequence handle — square accent, visually distinct from round data ports */
+.react-flow__handle.fp-handle-flow {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  background: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.react-flow__handle.fp-handle-flow.react-flow__handle-left {
+  left: -7px;
+}
+.react-flow__handle.fp-handle-flow.react-flow__handle-right {
+  right: -7px;
+}
+.react-flow__node {
+  font-family: var(--font-sans);
+}
+.react-flow__node.selected .fp-node {
+  box-shadow: var(--shadow-node), 0 0 0 2px var(--accent);
+}
+.react-flow__controls {
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-node);
+  border: 1px solid var(--border-soft);
+}
+.react-flow__controls-button {
+  background: var(--card);
+  border-bottom: 1px solid var(--border-soft);
+  color: var(--ink-muted);
+}
+.react-flow__controls-button:hover {
+  background: var(--card-muted);
+}
+.react-flow__controls-button svg {
+  fill: currentColor;
+}
+.react-flow__minimap {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--border-soft);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border-strong);
+  border-radius: 99px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@keyframes fp-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+.fp-running {
+  animation: fp-pulse 1.1s ease-in-out infinite;
+}
+
+@keyframes fp-overlay-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes fp-dialog-in {
+  from { opacity: 0; transform: translate(-50%, -48%) scale(0.97); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+.fp-overlay[data-state='open'] {
+  animation: fp-overlay-in 0.16s ease-out;
+}
+.fp-dialog[data-state='open'] {
+  animation: fp-dialog-in 0.18s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* animated rainbow border for the trigger / global node */
+@keyframes fp-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.fp-rainbow {
+  position: relative;
+  border-radius: 18px;
+  overflow: hidden;
+  isolation: isolate;
+}
+.fp-rainbow::before {
+  content: '';
+  position: absolute;
+  inset: -60%;
+  z-index: 0;
+  background: conic-gradient(
+    from 0deg,
+    #ff5f6d,
+    #ffc371,
+    #47e0a0,
+    #5b9dff,
+    #8b7cf6,
+    #ff5f6d
+  );
+  animation: fp-spin 6s linear infinite;
+}
+.fp-rainbow-inner {
+  position: relative;
+  z-index: 1;
+  margin: 2.5px;
+  border-radius: 15.5px;
+  background: var(--card);
+}
+
+/* animated colorful border for a node that is currently running */
+@keyframes fp-run-border {
+  0%,
+  100% {
+    box-shadow: 0 0 0 2px #5b9dff, 0 0 16px -2px rgba(91, 157, 255, 0.55), var(--shadow-node);
+  }
+  25% {
+    box-shadow: 0 0 0 2px #8b7cf6, 0 0 16px -2px rgba(139, 124, 246, 0.55), var(--shadow-node);
+  }
+  50% {
+    box-shadow: 0 0 0 2px #34d399, 0 0 16px -2px rgba(52, 211, 153, 0.55), var(--shadow-node);
+  }
+  75% {
+    box-shadow: 0 0 0 2px #ff8fa3, 0 0 16px -2px rgba(255, 143, 163, 0.55), var(--shadow-node);
+  }
+}
+.fp-node-running {
+  animation: fp-run-border 2s linear infinite;
+}
