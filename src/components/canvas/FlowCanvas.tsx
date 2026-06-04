@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef } from 'react'
+import { useCallback, useEffect, useMemo, useRef } from 'react'
 import {
   ReactFlow,
   Background,
@@ -23,7 +23,15 @@ const edgeTypes: EdgeTypes = { data: DataEdge, flow: FlowSequenceEdge }
 
 function Canvas() {
   const wrapper = useRef<HTMLDivElement>(null)
-  const { screenToFlowPosition } = useReactFlow()
+  const { screenToFlowPosition, fitView } = useReactFlow()
+  // focus a node (centre + zoom) on demand, e.g. from a status-bar chip click
+  const focusNodeId = useFlowStore((s) => s.focusNodeId)
+  const focusNonce = useFlowStore((s) => s.focusNonce)
+  useEffect(() => {
+    if (focusNodeId) {
+      fitView({ nodes: [{ id: focusNodeId }], duration: 600, maxZoom: 1.2, padding: 0.6 })
+    }
+  }, [focusNodeId, focusNonce, fitView])
   const { nodes, edges, onNodesChange, onEdgesChange, onConnect, addNode } =
     useFlowStore(
       useShallow((s) => ({
@@ -35,6 +43,8 @@ function Canvas() {
         addNode: s.addNode,
       })),
     )
+  const showMinimap = useFlowStore((s) => s.minimap)
+  const virtualize = useFlowStore((s) => s.virtualize)
 
   // generic component for every catalog type, except the special trigger node
   const nodeTypes = useMemo<NodeTypes>(
@@ -88,6 +98,7 @@ function Canvas() {
         fitViewOptions={{ padding: 0.25, maxZoom: 1 }}
         minZoom={0.3}
         maxZoom={1.6}
+        onlyRenderVisibleElements={virtualize}
         proOptions={{ hideAttribution: true }}
       >
         <Background
@@ -97,17 +108,19 @@ function Canvas() {
           color="var(--grid-dot)"
         />
         <Controls showInteractive={false} />
-        <MiniMap
-          pannable
-          zoomable
-          maskColor="color-mix(in srgb, var(--canvas) 70%, transparent)"
-          style={{ background: 'var(--surface)' }}
-          nodeColor={(n) =>
-            CATEGORIES[
-              NODE_TYPES.find((d) => d.type === n.type)?.category ?? 'ai'
-            ].to
-          }
-        />
+        {showMinimap && (
+          <MiniMap
+            pannable
+            zoomable
+            maskColor="color-mix(in srgb, var(--canvas) 70%, transparent)"
+            style={{ background: 'var(--surface)' }}
+            nodeColor={(n) =>
+              CATEGORIES[
+                NODE_TYPES.find((d) => d.type === n.type)?.category ?? 'ai'
+              ].to
+            }
+          />
+        )}
       </ReactFlow>
     </div>
   )

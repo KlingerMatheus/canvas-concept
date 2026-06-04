@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { memo, useMemo } from 'react'
 import {
   BaseEdge,
   EdgeLabelRenderer,
@@ -9,7 +9,7 @@ import { useFlowStore } from '@/store/flowStore'
 import { flowOrder } from '@/lib/flowOrder'
 import { EdgeDeleteButton } from './EdgeDeleteButton'
 
-export function FlowSequenceEdge({
+function FlowSequenceEdgeImpl({
   id,
   sourceX,
   sourceY,
@@ -65,3 +65,5 @@ export function FlowSequenceEdge({
     </>
   )
 }
+
+export const FlowSequenceEdge = memo(FlowSequenceEdgeImpl)

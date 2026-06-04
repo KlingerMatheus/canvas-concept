@@ -54,6 +54,7 @@
 
   --grid-dot: #c9cdd9;
   --shadow-node: 0 1px 2px rgba(16, 18, 32, 0.04), 0 8px 24px -8px rgba(16, 18, 32, 0.12);
+  --shadow-node-sm: 0 1px 2px rgba(16, 18, 32, 0.08);
 }
 
 .dark {
@@ -79,6 +80,7 @@
 
   --grid-dot: #21212c;
   --shadow-node: 0 1px 2px rgba(0, 0, 0, 0.3), 0 12px 32px -10px rgba(0, 0, 0, 0.6);
+  --shadow-node-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
 }
 
 * {
@@ -268,4 +270,16 @@ body {
 }
 .fp-node-running {
   animation: fp-run-border 2s linear infinite;
+}
+
+/* animations master switch — when off, kill continuous canvas animations (perf) */
+.fp-no-anim .react-flow__edge.animated .react-flow__edge-path {
+  animation: none !important;
+  stroke-dasharray: none !important;
+}
+.fp-no-anim .fp-node-running {
+  animation: none !important;
+}
+.fp-no-anim .fp-running {
+  animation: none !important;
 }

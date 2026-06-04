@@ -1,3 +1,4 @@
+import { memo } from 'react'
 import {
   BaseEdge,
   EdgeLabelRenderer,
@@ -6,7 +7,7 @@ import {
 } from '@xyflow/react'
 import { EdgeDeleteButton } from './EdgeDeleteButton'
 
-export function DataEdge({
+function DataEdgeImpl({
   id,
   sourceX,
   sourceY,
@@ -37,3 +38,5 @@ export function DataEdge({
     </>
   )
 }
+
+export const DataEdge = memo(DataEdgeImpl)

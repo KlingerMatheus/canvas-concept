@@ -1,15 +1,17 @@
-import { Play, Loader2, Moon, Sun, Trash2, RotateCcw, Workflow } from 'lucide-react'
+import { Play, Loader2, Trash2, RotateCcw, Workflow } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/cn'
 import { useFlowStore } from '@/store/flowStore'
 
 export function Toolbar() {
   const running = useFlowStore((s) => s.running)
-  const theme = useFlowStore((s) => s.theme)
   const runFlow = useFlowStore((s) => s.runFlow)
   const resetRun = useFlowStore((s) => s.resetRun)
   const clearCanvas = useFlowStore((s) => s.clearCanvas)
-  const toggleTheme = useFlowStore((s) => s.toggleTheme)
   const count = useFlowStore((s) => s.nodes.length)
+  const flows = useFlowStore((s) => s.flows)
+  const activeFlow = useFlowStore((s) => s.activeFlow)
+  const switchFlow = useFlowStore((s) => s.switchFlow)
 
   return (
     <header className="flex h-14 shrink-0 items-center justify-between border-b border-border-soft bg-surface px-4">
@@ -30,6 +32,26 @@ export function Toolbar() {
         </div>
       </div>
 
+      {/* flow switcher */}
+      <div className="flex items-center gap-1 rounded-lg border border-border-soft bg-card p-1">
+        {flows.map((f) => (
+          <button
+            key={f.id}
+            onClick={() => switchFlow(f.id)}
+            disabled={running}
+            title={`${f.count} nodes`}
+            className={cn(
+              'rounded-md px-2.5 py-1 text-[12px] font-medium transition-colors disabled:opacity-50',
+              activeFlow === f.id
+                ? 'bg-accent text-white'
+                : 'text-ink-muted hover:text-ink',
+            )}
+          >
+            {f.name}
+          </button>
+        ))}
+      </div>
+
       <div className="flex items-center gap-1.5">
         <span className="mr-1 hidden text-[12px] text-ink-faint sm:inline">
           {count} node{count !== 1 ? 's' : ''}
@@ -39,9 +61,6 @@ export function Toolbar() {
         </Button>
         <Button variant="ghost" size="icon" onClick={clearCanvas} title="Clear canvas">
           <Trash2 className="h-4 w-4" />
-        </Button>
-        <Button variant="ghost" size="icon" onClick={toggleTheme} title="Toggle theme">
-          {theme === 'dark' ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
         </Button>
         <Button onClick={runFlow} disabled={running} size="sm" className="ml-1">
           {running ? (

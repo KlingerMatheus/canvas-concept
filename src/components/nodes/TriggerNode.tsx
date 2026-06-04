@@ -1,16 +1,17 @@
+import { memo } from 'react'
 import { Handle, Position, type NodeProps } from '@xyflow/react'
 import { Globe, StickyNote, Settings2, ScrollText, Play, Loader2 } from 'lucide-react'
 import { useFlowStore, type FlowNode as FlowNodeType } from '@/store/flowStore'
 
-export function TriggerNode({ data }: NodeProps<FlowNodeType>) {
-  const nodes = useFlowStore((s) => s.nodes)
+function TriggerNodeImpl({ data }: NodeProps<FlowNodeType>) {
+  // primitive selectors → only re-render when these numbers change, not on drag
+  const nodeCount = useFlowStore((s) => s.nodes.length)
+  const logsCount = useFlowStore((s) => s.nodes.filter((n) => n.data.result).length)
   const running = useFlowStore((s) => s.running)
   const runFlow = useFlowStore((s) => s.runFlow)
 
   const name = String(data.values.name ?? 'Flow Global Node')
   const steps = Number(data.values.steps ?? 2)
-  const nodeCount = nodes.length
-  const logsCount = nodes.filter((n) => n.data.result).length
 
   return (
     <div className="relative w-[280px]">
@@ -69,3 +70,5 @@ export function TriggerNode({ data }: NodeProps<FlowNodeType>) {
     </div>
   )
 }
+
+export const TriggerNode = memo(TriggerNodeImpl)
