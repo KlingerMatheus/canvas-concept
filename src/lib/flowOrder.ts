@@ -24,3 +24,26 @@ export function flowOrder(edges: Edge[]): Map<string, number> {
   for (const e of flow) if (!order.has(e.id)) order.set(e.id, n++)
   return order
 }
+
+/**
+ * Node id -> execution step number, derived from the flow-sequence edges.
+ * Memoised on the `edges` array identity so per-node selectors that call this
+ * during a drag (edges ref unchanged) hit the cache and stay O(1).
+ */
+let _stepCache: { edges: Edge[]; map: Map<string, number> } | null = null
+export function nodeStepMap(edges: Edge[]): Map<string, number> {
+  if (_stepCache?.edges === edges) return _stepCache.map
+  const order = flowOrder(edges) // edgeId -> step
+  // the step of a node is the number of the flow edge leaving it; roots inherit
+  // their outgoing edge's number, terminal nodes inherit their incoming edge's.
+  const map = new Map<string, number>()
+  const flow = edges.filter((e) => e.data?.flow)
+  for (const e of flow) {
+    const step = order.get(e.id)!
+    if (!map.has(e.source)) map.set(e.source, step)
+    // the target of the last edge in a chain has no outgoing edge → +1
+    if (!map.has(e.target)) map.set(e.target, step + 1)
+  }
+  _stepCache = { edges, map }
+  return map
+}

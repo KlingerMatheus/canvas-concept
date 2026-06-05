@@ -215,6 +215,14 @@ body {
 .fp-dialog[data-state='open'] {
   animation: fp-dialog-in 0.18s cubic-bezier(0.16, 1, 0.3, 1);
 }
+/* full-screen variant — pure centered fade, no scale/slide */
+@keyframes fp-dialog-fade {
+  from { opacity: 0; transform: translate(-50%, -50%) scale(0.99); }
+  to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+}
+.fp-dialog.fp-dialog-fade[data-state='open'] {
+  animation: fp-dialog-fade 0.2s ease-out;
+}
 
 /* animated rainbow border for the trigger / global node */
 @keyframes fp-spin {

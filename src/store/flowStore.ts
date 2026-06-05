@@ -34,8 +34,8 @@ export type FlowNode = Node<FlowNodeData>
  * — so dragging (edges unchanged) re-renders nothing, and connecting re-renders
  * only the two endpoints. */
 export interface NodeConn {
-  /** input portId -> connected sources (with source node type for the tag) */
-  inByPort: Record<string, { edgeId: string; sourceType: string }[]>
+  /** input portId -> connected sources (with source node id/type for the tag + preview) */
+  inByPort: Record<string, { edgeId: string; sourceId: string; sourceType: string }[]>
   /** output portIds that have at least one connection */
   outConnected: string[]
 }
@@ -57,7 +57,11 @@ function patchConnFor(
     for (const e of edges) {
       if (e.target === id) {
         const port = e.targetHandle ?? 'in'
-        ;(inByPort[port] ||= []).push({ edgeId: e.id, sourceType: typeById.get(e.source) ?? '' })
+        ;(inByPort[port] ||= []).push({
+          edgeId: e.id,
+          sourceId: e.source,
+          sourceType: typeById.get(e.source) ?? '',
+        })
       }
       if (e.source === id) out.add(e.sourceHandle ?? 'out')
     }
@@ -78,6 +82,7 @@ function buildAllConn(nodes: FlowNode[], edges: Edge[]): Record<string, NodeConn
       const port = e.targetHandle ?? 'in'
       ;(t.inByPort[port] ||= []).push({
         edgeId: e.id,
+        sourceId: e.source,
         sourceType: typeById.get(e.source) ?? '',
       })
     }
